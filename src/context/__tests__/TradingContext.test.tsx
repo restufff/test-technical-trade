@@ -35,7 +35,7 @@ describe('TradingContext', () => {
     const initialIDR = result.current.balances.IDR.available;
     const initialBTC = result.current.balances.BTC.available;
 
-    let orderRes;
+    let orderRes: { success: boolean; message: string; order?: any } | undefined;
     await act(async () => {
       orderRes = await result.current.placeOrder({
         pairId: 'btc_idr',
@@ -63,7 +63,7 @@ describe('TradingContext', () => {
     const { result } = renderHook(() => useTrading(), { wrapper });
     const initialBTC = result.current.balances.BTC.available;
 
-    let orderRes;
+    let orderRes: { success: boolean; message: string; order?: any } | undefined;
     await act(async () => {
       orderRes = await result.current.placeOrder({
         pairId: 'btc_idr',
@@ -102,7 +102,7 @@ describe('TradingContext', () => {
 
     const { result } = renderHook(() => useTrading(), { wrapper });
 
-    let orderRes;
+    let orderRes: { success: boolean; message: string; order?: any } | undefined;
     await act(async () => {
       orderRes = await result.current.placeOrder({
         pairId: 'btc_idr',

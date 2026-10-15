@@ -21,7 +21,7 @@ describe('AuthContext', () => {
   it('allows logging in with demo credentials', async () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    let loginResult;
+    let loginResult: { success: boolean; message?: string } | undefined;
     await act(async () => {
       loginResult = await result.current.login('demo@exchange.mock', 'password123');
     });
@@ -36,7 +36,7 @@ describe('AuthContext', () => {
   it('rejects invalid password', async () => {
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    let loginResult;
+    let loginResult: { success: boolean; message?: string } | undefined;
     await act(async () => {
       loginResult = await result.current.login('demo@exchange.mock', 'wrongpassword');
     });
