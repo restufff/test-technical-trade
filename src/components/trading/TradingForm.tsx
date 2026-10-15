@@ -8,7 +8,7 @@ import { useToast } from '@/components/ui/ToastNotification';
 import { OrderSide, OrderType } from '@/types/trading';
 import { formatIDR, formatCrypto, parseNumericInput } from '@/utils/formatters';
 import QuickPercentageButtons from './QuickPercentageButtons';
-import { Wallet, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 
 interface TradingFormProps {
   selectedPrice?: number | null;
@@ -26,8 +26,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
   const [priceStr, setPriceStr] = useState<string>(currentPair.lastPrice.toString());
   const [amountStr, setAmountStr] = useState<string>('');
   const [activePercent, setActivePercent] = useState<number | null>(null);
-
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Sync price when selected from order book or pair changes
@@ -79,7 +77,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFeedback(null);
 
     if (!isAuthenticated) {
       setIsLoginModalOpen(true);
@@ -88,14 +85,12 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
 
     if (effectiveAmount <= 0) {
       const msg = 'Masukkan jumlah aset yang valid.';
-      setFeedback({ type: 'error', message: msg });
       showToast({ type: 'error', title: 'Order Gagal', message: msg });
       return;
     }
 
     if (effectivePrice <= 0) {
       const msg = 'Harga harus lebih besar dari 0.';
-      setFeedback({ type: 'error', message: msg });
       showToast({ type: 'error', title: 'Order Gagal', message: msg });
       return;
     }
@@ -111,7 +106,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
     setIsSubmitting(false);
 
     if (result.success) {
-      setFeedback({ type: 'success', message: result.message });
       setAmountStr('');
       setActivePercent(null);
 
@@ -121,7 +115,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
         message: result.message,
       });
     } else {
-      setFeedback({ type: 'error', message: result.message });
       showToast({
         type: 'error',
         title: 'Order Gagal',
@@ -139,7 +132,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
           onClick={() => {
             setSide('BUY');
             setActivePercent(null);
-            setFeedback(null);
           }}
           className={`py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${
             side === 'BUY'
@@ -154,7 +146,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
           onClick={() => {
             setSide('SELL');
             setActivePercent(null);
-            setFeedback(null);
           }}
           className={`py-2 rounded-lg font-bold text-xs uppercase tracking-wider transition-all ${
             side === 'SELL'
@@ -274,24 +265,6 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
                 </span>
               </div>
             </div>
-
-            {/* Feedback Message */}
-            {feedback && (
-              <div
-                className={`p-2.5 rounded-lg text-xs flex items-start gap-2 animate-in fade-in ${
-                  feedback.type === 'success'
-                    ? 'bg-trading-buy/15 border border-trading-buy/30 text-trading-buy'
-                    : 'bg-trading-sell/15 border border-trading-sell/30 text-trading-sell'
-                }`}
-              >
-                {feedback.type === 'success' ? (
-                  <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-                ) : (
-                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                )}
-                <span>{feedback.message}</span>
-              </div>
-            )}
           </div>
 
           {/* Submit Action Button */}
