@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useMarket } from '@/context/MarketContext';
 import { useTrading } from '@/context/TradingContext';
 import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/components/ui/ToastNotification';
 import { OrderSide, OrderType } from '@/types/trading';
 import { formatIDR, formatCrypto, parseNumericInput } from '@/utils/formatters';
 import QuickPercentageButtons from './QuickPercentageButtons';
-import { Wallet, AlertCircle, CheckCircle2, ArrowRightLeft } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { Wallet, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface TradingFormProps {
   selectedPrice?: number | null;
@@ -17,8 +17,9 @@ interface TradingFormProps {
 
 export default function TradingForm({ selectedPrice, selectedAmount }: TradingFormProps) {
   const { currentPair } = useMarket();
-  const { balances, placeOrder, setIsDepositModalOpen } = useTrading();
+  const { balances, placeOrder } = useTrading();
   const { isAuthenticated, setIsLoginModalOpen } = useAuth();
+  const { showToast } = useToast();
 
   const [side, setSide] = useState<OrderSide>('BUY');
   const [type, setType] = useState<OrderType>('LIMIT');
@@ -86,12 +87,16 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
     }
 
     if (effectiveAmount <= 0) {
-      setFeedback({ type: 'error', message: 'Masukkan jumlah aset yang valid.' });
+      const msg = 'Masukkan jumlah aset yang valid.';
+      setFeedback({ type: 'error', message: msg });
+      showToast({ type: 'error', title: 'Order Gagal', message: msg });
       return;
     }
 
     if (effectivePrice <= 0) {
-      setFeedback({ type: 'error', message: 'Harga harus lebih besar dari 0.' });
+      const msg = 'Harga harus lebih besar dari 0.';
+      setFeedback({ type: 'error', message: msg });
+      showToast({ type: 'error', title: 'Order Gagal', message: msg });
       return;
     }
 
@@ -110,18 +115,18 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
       setAmountStr('');
       setActivePercent(null);
 
-      // Trigger celebratory confetti on filled trade
-      try {
-        confetti({
-          particleCount: 40,
-          spread: 60,
-          origin: { y: 0.8 },
-        });
-      } catch {
-        // ignore
-      }
+      showToast({
+        type: type === 'MARKET' ? 'success' : 'info',
+        title: type === 'MARKET' ? 'Order Berhasil Terisi' : 'Order Terpasang',
+        message: result.message,
+      });
     } else {
       setFeedback({ type: 'error', message: result.message });
+      showToast({
+        type: 'error',
+        title: 'Order Gagal',
+        message: result.message,
+      });
     }
   };
 

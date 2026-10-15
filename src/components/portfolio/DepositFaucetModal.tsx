@@ -2,12 +2,13 @@
 
 import React, { useState } from 'react';
 import { useTrading } from '@/context/TradingContext';
+import { useToast } from '@/components/ui/ToastNotification';
 import { formatIDR } from '@/utils/formatters';
 import { X, PlusCircle, CheckCircle2, Coins, Sparkles } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 export default function DepositFaucetModal() {
   const { isDepositModalOpen, setIsDepositModalOpen, depositFunds, balances } = useTrading();
+  const { showToast } = useToast();
   const [amount, setAmount] = useState<number>(50000000);
   const [success, setSuccess] = useState(false);
 
@@ -20,20 +21,16 @@ export default function DepositFaucetModal() {
     depositFunds(amount);
     setSuccess(true);
 
-    try {
-      confetti({
-        particleCount: 50,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-    } catch {
-      // ignore
-    }
+    showToast({
+      type: 'success',
+      title: 'Klaim Saldo Berhasil',
+      message: `Saldo ${formatIDR(amount)} berhasil ditambahkan ke dompet akun Anda!`,
+    });
 
     setTimeout(() => {
       setSuccess(false);
       setIsDepositModalOpen(false);
-    }, 1200);
+    }, 1000);
   };
 
   return (

@@ -32,12 +32,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       const id = `toast_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
       const newToast: Toast = { id, type, title, message };
 
-      setToasts((prev) => [...prev, newToast]);
+      setToasts((prev) => [newToast, ...prev.slice(0, 4)]); // Keep max 5 toasts
 
-      // Auto dismiss after 4 seconds
+      // Auto dismiss after 4.5 seconds
       setTimeout(() => {
         removeToast(id);
-      }, 4000);
+      }, 4500);
     },
     [removeToast]
   );
@@ -45,8 +45,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={{ toasts, showToast, removeToast }}>
       {children}
-      {/* Toast container floating at bottom right */}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none max-w-sm w-full">
+      {/* Toast container floating at top right */}
+      <div className="fixed top-16 right-4 z-[9999] flex flex-col space-y-2.5 pointer-events-none max-w-sm w-full">
         {toasts.map((toast) => {
           const isSuccess = toast.type === 'success';
           const isError = toast.type === 'error';
@@ -54,28 +54,55 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           return (
             <div
               key={toast.id}
-              className={`pointer-events-auto p-3.5 rounded-xl border shadow-xl flex items-start gap-2.5 animate-in slide-in-from-bottom-2 duration-200 backdrop-blur-md ${
+              className={`pointer-events-auto p-3.5 rounded-xl border shadow-2xl flex items-start gap-3 animate-in slide-in-from-top-3 duration-250 backdrop-blur-md transition-all ${
                 isSuccess
-                  ? 'bg-[#0f2420]/95 border-trading-buy/40 text-trading-buy'
+                  ? 'bg-[#0a1f1b]/95 border-trading-buy/50 text-trading-buy shadow-trading-buy/10'
                   : isError
-                  ? 'bg-[#291419]/95 border-trading-sell/40 text-trading-sell'
-                  : 'bg-[#121c32]/95 border-indodax-cyan/40 text-indodax-cyan'
+                  ? 'bg-[#290e14]/95 border-trading-sell/50 text-trading-sell shadow-trading-sell/10'
+                  : 'bg-[#0f1d35]/95 border-indodax-cyan/50 text-indodax-cyan shadow-indodax-cyan/10'
               }`}
             >
-              {isSuccess ? (
-                <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
-              ) : isError ? (
-                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-              ) : (
-                <Info className="w-5 h-5 shrink-0 mt-0.5" />
-              )}
-              <div className="flex-grow text-xs">
-                <div className="font-bold text-white text-sm">{toast.title}</div>
-                {toast.message && <div className="text-gray-300 mt-0.5">{toast.message}</div>}
+              <div className="shrink-0 mt-0.5">
+                {isSuccess ? (
+                  <div className="w-6 h-6 rounded-full bg-trading-buy/20 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-trading-buy" />
+                  </div>
+                ) : isError ? (
+                  <div className="w-6 h-6 rounded-full bg-trading-sell/20 flex items-center justify-center">
+                    <AlertCircle className="w-4 h-4 text-trading-sell" />
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-indodax-cyan/20 flex items-center justify-center">
+                    <Info className="w-4 h-4 text-indodax-cyan" />
+                  </div>
+                )}
               </div>
+
+              <div className="flex-grow text-xs min-w-0">
+                <div className="font-bold text-white text-sm tracking-wide leading-tight flex items-center gap-1.5">
+                  {toast.title}
+                  <span
+                    className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
+                      isSuccess
+                        ? 'bg-trading-buy/20 text-trading-buy'
+                        : isError
+                        ? 'bg-trading-sell/20 text-trading-sell'
+                        : 'bg-indodax-cyan/20 text-indodax-cyan'
+                    }`}
+                  >
+                    {isSuccess ? 'SUKSES' : isError ? 'GAGAL' : 'INFO'}
+                  </span>
+                </div>
+                {toast.message && (
+                  <div className="text-gray-300 mt-1 leading-relaxed text-[11.5px] break-words">
+                    {toast.message}
+                  </div>
+                )}
+              </div>
+
               <button
                 onClick={() => removeToast(toast.id)}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors shrink-0 p-0.5 rounded hover:bg-white/10"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -90,7 +117,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 export function useToast(): ToastContextType {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
+    return {
+      toasts: [],
+      showToast: () => {},
+      removeToast: () => {},
+    };
   }
   return context;
 }

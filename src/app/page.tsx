@@ -138,14 +138,14 @@ function ExchangeContent() {
 
 export default function HomePage() {
   return (
-    <AuthProvider>
-      <MarketProvider autoTick={true}>
-        <TradingProvider>
-          <ToastProvider>
+    <ToastProvider>
+      <AuthProvider>
+        <MarketProvider autoTick={true}>
+          <TradingProvider>
             <ExchangeContent />
-          </ToastProvider>
-        </TradingProvider>
-      </MarketProvider>
-    </AuthProvider>
+          </TradingProvider>
+        </MarketProvider>
+      </AuthProvider>
+    </ToastProvider>
   );
 }

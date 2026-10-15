@@ -5,6 +5,8 @@ import { Order, OrderSide, OrderType, WalletBalances } from '../types/trading';
 import { DEFAULT_USER_BALANCES } from '../data/mockMarkets';
 import { useMarket } from './MarketContext';
 import { useAuth } from './AuthContext';
+import { useToast } from '@/components/ui/ToastNotification';
+import { formatIDR } from '@/utils/formatters';
 
 interface PlaceOrderParams {
   pairId: string;
@@ -36,6 +38,14 @@ const TradingContext = createContext<TradingContextType | undefined>(undefined);
 export function TradingProvider({ children }: { children: ReactNode }) {
   const { pairs, currentPair } = useMarket();
   const { user, setIsLoginModalOpen } = useAuth();
+
+  // Safely get showToast if ToastProvider is present
+  let toastApi: ReturnType<typeof useToast> | null = null;
+  try {
+    toastApi = useToast();
+  } catch {
+    // Outside ToastProvider (e.g. isolated test environments)
+  }
 
   // Consistent initial state for SSR
   const [balances, setBalances] = useState<WalletBalances>(() =>
@@ -138,6 +148,14 @@ export function TradingProvider({ children }: { children: ReactNode }) {
         };
         filledOrders.push(filled);
 
+        if (toastApi) {
+          toastApi.showToast({
+            type: 'success',
+            title: 'Order Mu Ter-match! (Terisi)',
+            message: `Limit order ${order.side} ${order.amount} ${pair.baseAsset} pada harga ${formatIDR(order.price)} berhasil terisi!`,
+          });
+        }
+
         if (order.side === 'BUY') {
           const lockedAmount = order.total + order.fee;
           if (updatedBalances.IDR) {
@@ -170,7 +188,7 @@ export function TradingProvider({ children }: { children: ReactNode }) {
       setOrderHistory((prev) => [...filledOrders, ...prev]);
       setBalances(updatedBalances);
     }
-  }, [pairs, openOrders, balances]);
+  }, [pairs, openOrders, balances, toastApi]);
 
   // Place order
   const placeOrder = useCallback(
@@ -334,9 +352,17 @@ export function TradingProvider({ children }: { children: ReactNode }) {
       setOpenOrders((prev) => prev.filter((o) => o.id !== orderId));
       setOrderHistory((prev) => [cancelledOrder, ...prev]);
 
+      if (toastApi) {
+        toastApi.showToast({
+          type: 'info',
+          title: 'Order Dibatalkan',
+          message: `Order ${order.side} ${order.amount} ${pair.baseAsset} berhasil dibatalkan.`,
+        });
+      }
+
       return { success: true, message: 'Order berhasil dibatalkan.' };
     },
-    [openOrders, pairs, currentPair, balances]
+    [openOrders, pairs, currentPair, balances, toastApi]
   );
 
   // Faucet Deposit
