@@ -355,7 +355,7 @@ export default function TradingChart() {
           {candles
             .filter((_, i) => i % Math.max(1, Math.floor(candles.length / 5)) === 0)
             .map((c, i) => (
-              <span key={i}>{formatTime(c.time)}</span>
+              <span key={i} suppressHydrationWarning>{formatTime(c.time)}</span>
             ))}
         </div>
       </div>

@@ -41,7 +41,7 @@ export default function MarketTrades() {
               <span className="text-right text-gray-300">
                 {formatCrypto(trade.amount, currentPair.amountDecimals > 4 ? 4 : currentPair.amountDecimals)}
               </span>
-              <span className="text-right text-gray-400">
+              <span suppressHydrationWarning className="text-right text-gray-400">
                 {formatTime(trade.timestamp)}
               </span>
             </div>

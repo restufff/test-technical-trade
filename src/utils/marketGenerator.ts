@@ -1,14 +1,21 @@
 import { TradingPair, OrderBook, OrderBookEntry, MarketTrade } from '../types/trading';
 
 /**
- * Generate initial realistic order book bids & asks
+ * Deterministic pseudo-random number generator for SSR-safe initial render
+ */
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 12.9898) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+/**
+ * Generate initial realistic order book bids & asks (deterministic for SSR)
  */
 export function generateInitialOrderBook(pair: TradingPair, depthCount: number = 10): OrderBook {
   const bids: OrderBookEntry[] = [];
   const asks: OrderBookEntry[] = [];
 
   const basePrice = pair.lastPrice;
-  // Step size proportional to price
   const stepPercent = 0.0006; // 0.06% step
 
   let cumulativeBidTotal = 0;
@@ -16,11 +23,11 @@ export function generateInitialOrderBook(pair: TradingPair, depthCount: number =
 
   // Generate Bids (Buy orders, descending price)
   for (let i = 0; i < depthCount; i++) {
-    const spreadOffset = 0.0003; // initial minimum gap
+    const spreadOffset = 0.0003;
     const price = Math.round(basePrice * (1 - spreadOffset - i * stepPercent));
-    // Amount variation
     const baseMultiplier = pair.priceDecimals === 0 && basePrice > 1000000 ? 0.05 : 50;
-    const amount = Number((baseMultiplier * (1 + Math.sin(i * 1.5) * 0.4 + Math.random() * 0.5)).toFixed(pair.amountDecimals));
+    const randFactor = pseudoRandom(i + 1);
+    const amount = Number((baseMultiplier * (1 + Math.sin(i * 1.5) * 0.4 + randFactor * 0.5)).toFixed(pair.amountDecimals));
     const total = Math.round(price * amount);
     cumulativeBidTotal += total;
 
@@ -37,7 +44,8 @@ export function generateInitialOrderBook(pair: TradingPair, depthCount: number =
     const spreadOffset = 0.0003;
     const price = Math.round(basePrice * (1 + spreadOffset + i * stepPercent));
     const baseMultiplier = pair.priceDecimals === 0 && basePrice > 1000000 ? 0.05 : 50;
-    const amount = Number((baseMultiplier * (1 + Math.cos(i * 1.5) * 0.4 + Math.random() * 0.5)).toFixed(pair.amountDecimals));
+    const randFactor = pseudoRandom(i + 101);
+    const amount = Number((baseMultiplier * (1 + Math.cos(i * 1.5) * 0.4 + randFactor * 0.5)).toFixed(pair.amountDecimals));
     const total = Math.round(price * amount);
     cumulativeAskTotal += total;
 
@@ -76,24 +84,26 @@ export function generateInitialOrderBook(pair: TradingPair, depthCount: number =
 }
 
 /**
- * Generate historical/initial trades stream
+ * Generate historical/initial trades stream (deterministic for SSR)
  */
-export function generateInitialTrades(pair: TradingPair, count: number = 20): MarketTrade[] {
+export function generateInitialTrades(pair: TradingPair, count: number = 20, fixedBaseTime?: number): MarketTrade[] {
   const trades: MarketTrade[] = [];
-  const now = Date.now();
+  // Use a fixed timestamp or rounded interval for initial render to avoid SSR mismatch
+  const now = fixedBaseTime || 1760500000000;
   let currentPrice = pair.lastPrice;
 
   for (let i = 0; i < count; i++) {
-    const side = Math.random() > 0.48 ? 'BUY' : 'SELL';
-    const delta = (Math.random() - 0.5) * 0.001 * currentPrice;
+    const rand = pseudoRandom(i + 50);
+    const side = rand > 0.48 ? 'BUY' : 'SELL';
+    const delta = (rand - 0.5) * 0.001 * currentPrice;
     currentPrice = Math.round(currentPrice + delta);
 
     const baseAmount = pair.priceDecimals === 0 && pair.lastPrice > 1000000 ? 0.02 : 25;
-    const amount = Number((baseAmount * (0.2 + Math.random() * 1.8)).toFixed(pair.amountDecimals));
+    const amount = Number((baseAmount * (0.2 + pseudoRandom(i + 200) * 1.8)).toFixed(pair.amountDecimals));
     const total = Math.round(currentPrice * amount);
 
     trades.push({
-      id: `trade_${now - i * 4000}_${i}`,
+      id: `trade_init_${i}`,
       price: currentPrice,
       amount,
       total,
@@ -106,7 +116,7 @@ export function generateInitialTrades(pair: TradingPair, count: number = 20): Ma
 }
 
 /**
- * Simulate live tick fluctuation
+ * Simulate live tick fluctuation (Client-side only)
  */
 export function simulatePriceTick(
   pair: TradingPair,
@@ -144,7 +154,6 @@ export function simulatePriceTick(
   const volume24h = pair.volume24h + tradeTotal;
   const baseVolume24h = Number((pair.baseVolume24h + tradeAmount).toFixed(pair.amountDecimals));
 
-  // Update % change roughly
   const estimatedOpen = pair.lastPrice / (1 + pair.priceChange24h / 100);
   const updatedChange = Number((((newPrice - estimatedOpen) / estimatedOpen) * 100).toFixed(2));
 

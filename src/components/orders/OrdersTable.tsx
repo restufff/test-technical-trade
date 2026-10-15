@@ -7,7 +7,7 @@ import { formatIDR, formatCrypto, formatTime } from '@/utils/formatters';
 import { ListOrdered, Clock, Wallet, Trash2, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function OrdersTable() {
-  const { openOrders, orderHistory, cancelOrder, balances, setIsDepositModalOpen } = useTrading();
+  const { openOrders, orderHistory, cancelOrder, balances } = useTrading();
   const { pairs } = useMarket();
   const [activeTab, setActiveTab] = useState<'open' | 'history' | 'assets'>('open');
 
@@ -92,7 +92,9 @@ export default function OrdersTable() {
                     const pair = pairs.find((p) => p.id === order.pairId);
                     return (
                       <tr key={order.id} className="hover:bg-[#121c30] transition-colors">
-                        <td className="py-2.5 px-4 text-gray-400">{formatTime(order.createdAt, true)}</td>
+                        <td suppressHydrationWarning className="py-2.5 px-4 text-gray-400">
+                          {formatTime(order.createdAt, true)}
+                        </td>
                         <td className="py-2.5 px-4 font-bold text-white">{pair?.symbol || order.pairId}</td>
                         <td className="py-2.5 px-4 text-gray-300">{order.type}</td>
                         <td className="py-2.5 px-4">
@@ -161,7 +163,9 @@ export default function OrdersTable() {
 
                     return (
                       <tr key={order.id} className="hover:bg-[#121c30] transition-colors">
-                        <td className="py-2.5 px-4 text-gray-400">{formatTime(order.createdAt, true)}</td>
+                        <td suppressHydrationWarning className="py-2.5 px-4 text-gray-400">
+                          {formatTime(order.createdAt, true)}
+                        </td>
                         <td className="py-2.5 px-4 font-bold text-white">{pair?.symbol || order.pairId}</td>
                         <td className="py-2.5 px-4 text-gray-300">{order.type}</td>
                         <td className="py-2.5 px-4">

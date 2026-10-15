@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider } from '@/context/AuthContext';
 import { MarketProvider } from '@/context/MarketContext';
 import { TradingProvider } from '@/context/TradingContext';
@@ -23,6 +23,11 @@ function ExchangeContent() {
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [rightPanelTab, setRightPanelTab] = useState<'orderbook' | 'trades'>('orderbook');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleSelectPrice = (price: number) => {
     setSelectedPrice(price);
@@ -31,6 +36,24 @@ function ExchangeContent() {
   const handleSelectAmount = (amount: number) => {
     setSelectedAmount(amount);
   };
+
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#0b111e] text-gray-100">
+        <Navbar />
+        <MarketTickerBar />
+        <div className="flex-grow flex items-center justify-center min-h-[400px]">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-4 border-indodax-cyan border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs text-gray-400 font-semibold tracking-wide">
+              Memuat Indodax Trading Platform...
+            </span>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0b111e] text-gray-100">
@@ -55,7 +78,7 @@ function ExchangeContent() {
 
         {/* Right Section (Order Book / Trades + Trading Form) - spans 4 cols on desktop */}
         <section className="lg:col-span-4 flex flex-col gap-2 sm:gap-3">
-          {/* Tab Switcher for Orderbook vs Market Trades on smaller heights */}
+          {/* Tab Switcher for Orderbook vs Market Trades */}
           <div className="h-[390px] flex flex-col">
             <div className="flex items-center space-x-1 mb-1.5 px-1">
               <button

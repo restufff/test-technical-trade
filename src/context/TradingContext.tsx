@@ -37,68 +37,59 @@ export function TradingProvider({ children }: { children: ReactNode }) {
   const { pairs, currentPair } = useMarket();
   const { user, setIsLoginModalOpen } = useAuth();
 
-  const [balances, setBalances] = useState<WalletBalances>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(BALANCES_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch {
-        // fallback
-      }
-    }
-    return JSON.parse(JSON.stringify(DEFAULT_USER_BALANCES));
-  });
-
-  const [openOrders, setOpenOrders] = useState<Order[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(OPEN_ORDERS_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch {
-        // fallback
-      }
-    }
-    return [];
-  });
-
-  const [orderHistory, setOrderHistory] = useState<Order[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem(ORDER_HISTORY_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch {
-        // fallback
-      }
-    }
-    return [];
-  });
-
+  // Consistent initial state for SSR
+  const [balances, setBalances] = useState<WalletBalances>(() =>
+    JSON.parse(JSON.stringify(DEFAULT_USER_BALANCES))
+  );
+  const [openOrders, setOpenOrders] = useState<Order[]>([]);
+  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Sync to localStorage
+  // Hydrate from localStorage on client mount only
   useEffect(() => {
+    try {
+      const savedBal = localStorage.getItem(BALANCES_KEY);
+      if (savedBal) setBalances(JSON.parse(savedBal));
+
+      const savedOrders = localStorage.getItem(OPEN_ORDERS_KEY);
+      if (savedOrders) setOpenOrders(JSON.parse(savedOrders));
+
+      const savedHistory = localStorage.getItem(ORDER_HISTORY_KEY);
+      if (savedHistory) setOrderHistory(JSON.parse(savedHistory));
+    } catch {
+      // ignore
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Sync to localStorage after hydration
+  useEffect(() => {
+    if (!isHydrated) return;
     try {
       localStorage.setItem(BALANCES_KEY, JSON.stringify(balances));
     } catch {
       // ignore
     }
-  }, [balances]);
+  }, [balances, isHydrated]);
 
   useEffect(() => {
+    if (!isHydrated) return;
     try {
       localStorage.setItem(OPEN_ORDERS_KEY, JSON.stringify(openOrders));
     } catch {
       // ignore
     }
-  }, [openOrders]);
+  }, [openOrders, isHydrated]);
 
   useEffect(() => {
+    if (!isHydrated) return;
     try {
       localStorage.setItem(ORDER_HISTORY_KEY, JSON.stringify(orderHistory));
     } catch {
       // ignore
     }
-  }, [orderHistory]);
+  }, [orderHistory, isHydrated]);
 
   // Compute Total Portfolio in IDR
   const totalPortfolioIDR = React.useMemo(() => {
@@ -133,10 +124,8 @@ export function TradingProvider({ children }: { children: ReactNode }) {
 
       let isTriggered = false;
       if (order.side === 'BUY' && pair.lastPrice <= order.price) {
-        // Limit BUY condition met!
         isTriggered = true;
       } else if (order.side === 'SELL' && pair.lastPrice >= order.price) {
-        // Limit SELL condition met!
         isTriggered = true;
       }
 
@@ -149,9 +138,7 @@ export function TradingProvider({ children }: { children: ReactNode }) {
         };
         filledOrders.push(filled);
 
-        // Update balances for filled limit order
         if (order.side === 'BUY') {
-          // Unlock IDR that was committed, credit crypto
           const lockedAmount = order.total + order.fee;
           if (updatedBalances.IDR) {
             updatedBalances.IDR.locked = Math.max(0, updatedBalances.IDR.locked - lockedAmount);
@@ -161,7 +148,6 @@ export function TradingProvider({ children }: { children: ReactNode }) {
           }
           updatedBalances[pair.baseAsset].available += order.amount;
         } else {
-          // Unlock Crypto that was committed, credit IDR
           if (updatedBalances[pair.baseAsset]) {
             updatedBalances[pair.baseAsset].locked = Math.max(
               0,
@@ -245,7 +231,6 @@ export function TradingProvider({ children }: { children: ReactNode }) {
       const orderId = `ord_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
 
       if (type === 'MARKET') {
-        // Execute immediately
         if (side === 'BUY') {
           updatedBalances.IDR.available -= total + fee;
           updatedBalances[pair.baseAsset].available += amount;
@@ -277,7 +262,6 @@ export function TradingProvider({ children }: { children: ReactNode }) {
           order: newOrder,
         };
       } else {
-        // LIMIT Order -> lock funds
         if (side === 'BUY') {
           const lockIDR = total + fee;
           updatedBalances.IDR.available -= lockIDR;
@@ -325,7 +309,6 @@ export function TradingProvider({ children }: { children: ReactNode }) {
       const pair = pairs.find((p) => p.id === order.pairId) || currentPair;
       const updatedBalances = { ...balances };
 
-      // Refund locked funds
       if (order.side === 'BUY') {
         const lockedIDR = order.total + order.fee;
         if (updatedBalances.IDR) {

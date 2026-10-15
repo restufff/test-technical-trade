@@ -10,36 +10,47 @@ const TIMEFRAME_MS: Record<Timeframe, number> = {
   '1D': 24 * 60 * 60 * 1000,
 };
 
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed * 9.1234) * 54321.9876;
+  return x - Math.floor(x);
+}
+
 /**
- * Generate synthetic historical candles for visualization
+ * Generate synthetic historical candles for visualization (deterministic for SSR)
  */
 export function generateHistoricalCandles(
   basePrice: number,
   timeframe: Timeframe = '15m',
-  count: number = 40
+  count: number = 40,
+  fixedTime?: number
 ): CandlestickData[] {
   const candles: CandlestickData[] = [];
   const interval = TIMEFRAME_MS[timeframe];
-  const now = Date.now();
+  // Round to interval boundary so client and server produce identical timestamps
+  const now = fixedTime || Math.floor((1760500000000) / interval) * interval;
 
-  let currentPrice = basePrice * (1 - 0.02 + Math.random() * 0.04);
+  let currentPrice = basePrice * 0.98;
 
   for (let i = count - 1; i >= 0; i--) {
     const time = now - i * interval;
     const volatility = 0.004; // 0.4% per candle
     const open = currentPrice;
 
-    const change = (Math.random() - 0.49) * 2 * volatility * open;
+    const rand1 = pseudoRandom(i + 1);
+    const rand2 = pseudoRandom(i + 101);
+    const rand3 = pseudoRandom(i + 201);
+
+    const change = (rand1 - 0.49) * 2 * volatility * open;
     const close = Math.max(1, Math.round(open + change));
 
-    const wickHigh = Math.random() * volatility * open * 1.5;
-    const wickLow = Math.random() * volatility * open * 1.5;
+    const wickHigh = rand2 * volatility * open * 1.5;
+    const wickLow = rand3 * volatility * open * 1.5;
 
     const high = Math.round(Math.max(open, close) + wickHigh);
     const low = Math.max(1, Math.round(Math.min(open, close) - wickLow));
 
     const baseVol = basePrice > 1000000 ? 5 : 5000;
-    const volume = Number((baseVol * (0.5 + Math.random() * 1.8)).toFixed(2));
+    const volume = Number((baseVol * (0.5 + rand1 * 1.8)).toFixed(2));
 
     candles.push({
       time,
