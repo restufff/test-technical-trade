@@ -109,7 +109,7 @@ export default function DepositFaucetModal() {
           )}
 
           <p className="text-center text-[11px] text-gray-500">
-            *Saldo faucet ini adalah dana simulasi untuk latihan trading di platform Indodax demo.
+            *Saldo faucet ini adalah dana simulasi untuk latihan trading.
           </p>
         </div>
       </div>

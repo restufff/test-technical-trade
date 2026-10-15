@@ -28,7 +28,7 @@ describe('TradingContext', () => {
   it('executes Market Buy order immediately and deducts IDR and adds crypto', async () => {
     const { result: authResult } = renderHook(() => useAuth(), { wrapper });
     await act(async () => {
-      await authResult.current.login('demo@indodax.mock', 'password123');
+      await authResult.current.login('demo@exchange.mock', 'password123');
     });
 
     const { result } = renderHook(() => useTrading(), { wrapper });
@@ -57,7 +57,7 @@ describe('TradingContext', () => {
   it('places Limit Sell order, locks crypto, and allows cancellation', async () => {
     const { result: authResult } = renderHook(() => useAuth(), { wrapper });
     await act(async () => {
-      await authResult.current.login('demo@indodax.mock', 'password123');
+      await authResult.current.login('demo@exchange.mock', 'password123');
     });
 
     const { result } = renderHook(() => useTrading(), { wrapper });
@@ -97,7 +97,7 @@ describe('TradingContext', () => {
   it('rejects order when available balance is insufficient', async () => {
     const { result: authResult } = renderHook(() => useAuth(), { wrapper });
     await act(async () => {
-      await authResult.current.login('demo@indodax.mock', 'password123');
+      await authResult.current.login('demo@exchange.mock', 'password123');
     });
 
     const { result } = renderHook(() => useTrading(), { wrapper });

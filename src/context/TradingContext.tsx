@@ -29,9 +29,9 @@ interface TradingContextType {
   setIsDepositModalOpen: (open: boolean) => void;
 }
 
-const BALANCES_KEY = 'indodax_wallet_balances';
-const OPEN_ORDERS_KEY = 'indodax_open_orders';
-const ORDER_HISTORY_KEY = 'indodax_order_history';
+const BALANCES_KEY = 'exchange_wallet_balances';
+const OPEN_ORDERS_KEY = 'exchange_open_orders';
+const ORDER_HISTORY_KEY = 'exchange_order_history';
 
 const TradingContext = createContext<TradingContextType | undefined>(undefined);
 

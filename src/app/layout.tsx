@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Indodax - Indonesia Crypto Exchange (Trading Simulator)',
+  title: 'Trading Simulator - Crypto Exchange Platform',
   description: 'Jual Beli Bitcoin, Ethereum, USDT dan Aset Kripto Lainnya dengan Rupiah di Platform Trading Simulator Modern.',
 };
 

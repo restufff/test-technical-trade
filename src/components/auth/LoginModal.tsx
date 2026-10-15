@@ -35,16 +35,16 @@ export default function LoginModal() {
         <div className="flex items-center justify-between px-6 pt-5 pb-3">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg bg-indodax-cyan/20 border border-indodax-cyan/40 flex items-center justify-center text-indodax-cyan font-bold">
-              ID
+              EX
             </div>
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-1.5">
-                Masuk ke Indodax
+                Masuk ke Platform
                 <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indodax-cyan/15 text-indodax-cyan border border-indodax-cyan/30">
                   Demo
                 </span>
               </h2>
-              <p className="text-xs text-gray-400">Trading Simulator Indonesia</p>
+              <p className="text-xs text-gray-400">Trading Simulator Platform</p>
             </div>
           </div>
           <button
@@ -105,7 +105,7 @@ export default function LoginModal() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="demo@indodax.mock"
+                  placeholder="demo@exchange.mock"
                   required
                   className="w-full pl-9 pr-3 py-2 text-sm bg-[#0b111e] border border-[#1e2d4a] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-indodax-cyan focus:ring-1 focus:ring-indodax-cyan transition-colors"
                 />

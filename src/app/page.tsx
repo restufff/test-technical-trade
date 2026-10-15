@@ -46,7 +46,7 @@ function ExchangeContent() {
           <div className="flex flex-col items-center gap-3">
             <div className="w-10 h-10 border-4 border-indodax-cyan border-t-transparent rounded-full animate-spin" />
             <span className="text-xs text-gray-400 font-semibold tracking-wide">
-              Memuat Indodax Trading Platform...
+              Memuat Trading Platform...
             </span>
           </div>
         </div>

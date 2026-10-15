@@ -5,15 +5,15 @@ import { UserAccount } from '../types/trading';
 
 export const DEMO_USERS: (UserAccount & { password: string })[] = [
   {
-    id: 'user_idx_001',
+    id: 'user_demo_001',
     name: 'Account-Testing-01',
-    email: 'demo@indodax.mock',
+    email: 'demo@exchange.mock',
     password: 'password123',
     kycStatus: 'VERIFIED_LEVEL_2',
     memberSince: 'Januari 2022',
   },
   {
-    id: 'user_idx_002',
+    id: 'user_demo_002',
     name: 'Account-Testing-02',
     email: 'trader@crypto.id',
     password: 'password123',
@@ -35,7 +35,7 @@ interface AuthContextType {
   setIsProfileModalOpen: (open: boolean) => void;
 }
 
-const STORAGE_KEY = 'indodax_user_session';
+const STORAGE_KEY = 'exchange_user_session';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
