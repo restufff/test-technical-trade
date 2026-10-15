@@ -14,7 +14,7 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
   const { currentPair, orderBook, priceFlash } = useMarket();
   const [viewMode, setViewMode] = useState<'both' | 'bids' | 'asks'>('both');
 
-  const visibleCount = viewMode === 'both' ? 7 : 14;
+  const visibleCount = viewMode === 'both' ? 12 : 24;
   const asksToDisplay = [...orderBook.asks.slice(0, visibleCount)].reverse();
   const bidsToDisplay = orderBook.bids.slice(0, visibleCount);
 
@@ -27,8 +27,8 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
-      {/* Header & View Mode Switcher */}
-      <div className="px-3 py-2 border-b border-[#18233c] flex items-center justify-between bg-[#0d1424]">
+      {/* Header & View Mode Switcher (Fixed) */}
+      <div className="px-3 py-2 border-b border-[#18233c] flex items-center justify-between bg-[#0d1424] shrink-0">
         <div className="flex items-center space-x-1.5">
           <Layers className="w-3.5 h-3.5 text-indodax-cyan" />
           <h3 className="text-xs font-bold text-white tracking-wide">Order Book</h3>
@@ -67,23 +67,23 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
         </div>
       </div>
 
-      {/* Table Column Headers */}
-      <div className="grid grid-cols-3 px-3 py-1.5 text-[10px] text-gray-400 font-semibold border-b border-[#141f33] bg-[#0b111e]">
+      {/* Table Column Headers (Fixed) */}
+      <div className="grid grid-cols-3 px-3 py-1.5 text-[10px] text-gray-400 font-semibold border-b border-[#141f33] bg-[#0b111e] shrink-0">
         <span>Harga (IDR)</span>
         <span className="text-right">Jumlah ({currentPair.baseAsset})</span>
         <span className="text-right">Total (IDR)</span>
       </div>
 
-      {/* Orders List Container */}
-      <div className="flex-grow flex flex-col justify-between overflow-hidden text-[11px] font-mono tabular-nums">
-        {/* Asks (Sell Orders) */}
+      {/* Scrollable Order Book Section */}
+      <div className="flex-grow min-h-0 flex flex-col overflow-hidden text-[11px] font-mono tabular-nums">
+        {/* Asks (Sell Orders) - Scrollable */}
         {(viewMode === 'both' || viewMode === 'asks') && (
-          <div className="flex flex-col justify-end overflow-hidden divide-y divide-[#121b2f]/40">
+          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
             {asksToDisplay.map((entry, idx) => (
               <button
                 key={`ask-${idx}-${entry.price}`}
                 onClick={() => handleRowClick(entry.price, entry.amount)}
-                className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full"
+                className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full shrink-0"
               >
                 {/* Visual Depth Bar */}
                 <div
@@ -104,8 +104,8 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
           </div>
         )}
 
-        {/* Center Spread & Last Price Bar */}
-        <div className="px-3 py-1.5 my-0.5 bg-[#0a101d] border-y border-[#18243d] flex items-center justify-between text-xs font-semibold">
+        {/* Center Spread & Last Price Bar (Fixed in middle, does not scroll) */}
+        <div className="shrink-0 px-3 py-1.5 my-0.5 bg-[#0a101d] border-y border-[#18243d] flex items-center justify-between text-xs font-semibold z-10">
           <div className="flex items-center space-x-2">
             <span
               className={`text-sm font-bold flex items-center gap-1 transition-colors ${
@@ -129,14 +129,14 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
           </div>
         </div>
 
-        {/* Bids (Buy Orders) */}
+        {/* Bids (Buy Orders) - Scrollable */}
         {(viewMode === 'both' || viewMode === 'bids') && (
-          <div className="flex flex-col overflow-hidden divide-y divide-[#121b2f]/40">
+          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
             {bidsToDisplay.map((entry, idx) => (
               <button
                 key={`bid-${idx}-${entry.price}`}
                 onClick={() => handleRowClick(entry.price, entry.amount)}
-                className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full"
+                className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full shrink-0"
               >
                 {/* Visual Depth Bar */}
                 <div

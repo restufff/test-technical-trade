@@ -6,7 +6,7 @@ import { UserAccount } from '../types/trading';
 export const DEMO_USERS: (UserAccount & { password: string })[] = [
   {
     id: 'user_idx_001',
-    name: 'Budi Santoso (Pro Trader)',
+    name: 'Account-Testing-01',
     email: 'demo@indodax.mock',
     password: 'password123',
     kycStatus: 'VERIFIED_LEVEL_2',
@@ -14,7 +14,7 @@ export const DEMO_USERS: (UserAccount & { password: string })[] = [
   },
   {
     id: 'user_idx_002',
-    name: 'Siti Rahma (Crypto Investor)',
+    name: 'Account-Testing-02',
     email: 'trader@crypto.id',
     password: 'password123',
     kycStatus: 'VERIFIED_LEVEL_2',

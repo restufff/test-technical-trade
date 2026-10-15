@@ -79,8 +79,8 @@ function ExchangeContent() {
         {/* Right Section (Order Book / Trades + Trading Form) - spans 4 cols on desktop */}
         <section className="lg:col-span-4 flex flex-col gap-2 sm:gap-3">
           {/* Tab Switcher for Orderbook vs Market Trades */}
-          <div className="h-[390px] flex flex-col">
-            <div className="flex items-center space-x-1 mb-1.5 px-1">
+          <div className="h-[400px] flex flex-col min-h-0">
+            <div className="flex items-center space-x-1 mb-1.5 px-1 shrink-0">
               <button
                 onClick={() => setRightPanelTab('orderbook')}
                 className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
@@ -103,7 +103,7 @@ function ExchangeContent() {
               </button>
             </div>
 
-            <div className="flex-grow h-full">
+            <div className="flex-grow min-h-0">
               {rightPanelTab === 'orderbook' ? (
                 <OrderBook
                   onSelectPrice={handleSelectPrice}
@@ -116,7 +116,7 @@ function ExchangeContent() {
           </div>
 
           {/* Buy / Sell Trading Form Entry Widget */}
-          <div className="flex-grow min-h-[380px]">
+          <div className="flex-grow shrink-0">
             <TradingForm
               selectedPrice={selectedPrice}
               selectedAmount={selectedAmount}

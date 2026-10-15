@@ -128,7 +128,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
       {/* Side Tabs (Beli vs Jual) */}
-      <div className="grid grid-cols-2 p-1.5 bg-[#0d1424] border-b border-[#18233c] gap-1.5">
+      <div className="grid grid-cols-2 p-1.5 bg-[#0d1424] border-b border-[#18233c] gap-1.5 shrink-0">
         <button
           type="button"
           onClick={() => {
