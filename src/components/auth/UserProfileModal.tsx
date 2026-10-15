@@ -58,23 +58,23 @@ export default function UserProfileModal() {
             <div className="flex items-center justify-between p-3 rounded-lg bg-[#0b111e] border border-[#1e2d4a]">
               <span className="text-gray-400 flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-indodax-cyan" />
-                Status Keamanan
+                Keamanan
               </span>
-              <span className="font-medium text-trading-buy">2FA Aktif (Simulasi)</span>
+              <span className="font-medium text-trading-buy">2FA Aktif</span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-[#0b111e] border border-[#1e2d4a]">
               <span className="text-gray-400 flex items-center gap-1.5">
                 <Award className="w-3.5 h-3.5 text-indodax-cyan" />
-                Level Akun VIP
+                Tier Akun
               </span>
-              <span className="font-medium text-white">VIP Tier 1 (Maker 0.1% / Taker 0.1%)</span>
+              <span className="font-medium text-white">VIP 1 (Fee 0.1%)</span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-[#0b111e] border border-[#1e2d4a]">
               <span className="text-gray-400 flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-indodax-cyan" />
-                Anggota Sejak
+                Bergabung
               </span>
               <span className="font-medium text-gray-200">{user.memberSince}</span>
             </div>
@@ -86,7 +86,7 @@ export default function UserProfileModal() {
             className="w-full py-2.5 rounded-lg bg-[#1a233a] hover:bg-trading-sell/20 border border-[#2a385a] hover:border-trading-sell/40 text-trading-sell font-semibold text-sm transition-all flex items-center justify-center gap-2 mt-4"
           >
             <LogOut className="w-4 h-4" />
-            Keluar dari Akun (Logout)
+            Keluar
           </button>
         </div>
       </div>

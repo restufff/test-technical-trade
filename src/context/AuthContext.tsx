@@ -63,11 +63,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     );
 
     if (!found) {
-      return { success: false, message: 'Email tidak ditemukan. Silakan gunakan akun demo.' };
+      return { success: false, message: 'Email tidak terdaftar.' };
     }
 
     if (found.password !== password) {
-      return { success: false, message: 'Password salah. Gunakan: password123' };
+      return { success: false, message: 'Password salah.' };
     }
 
     const account: UserAccount = {
