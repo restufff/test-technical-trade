@@ -12,7 +12,6 @@ import {
   EyeOff,
   CheckCircle,
   LogIn,
-  Layers,
   RotateCcw,
 } from 'lucide-react';
 
@@ -29,26 +28,18 @@ export default function Navbar() {
           <div className="flex items-center space-x-2.5">
             {/* Indodax Stylized Modern Logo */}
             <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-indodax-blue to-indodax-cyan shadow-lg shadow-indodax-cyan/20">
-              <span className="text-[#0b111e] font-black text-sm tracking-tighter">IDX</span>
+              <span className="text-[#0b111e] font-black text-sm tracking-tighter">TEST</span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="font-extrabold text-lg tracking-wider text-white">
-                INDODAX
+                QA-Pre-Test
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indodax-cyan/15 text-indodax-cyan border border-indodax-cyan/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-indodax-cyan animate-ping" />
-                DEMO SIMULATOR
+                Trading Simulator
               </span>
             </div>
           </div>
-
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1 text-xs font-semibold">
-            <span className="px-3 py-1.5 rounded-lg bg-[#142038] text-indodax-cyan border border-indodax-cyan/30 flex items-center gap-1.5 cursor-pointer">
-              <Layers className="w-3.5 h-3.5" />
-              Spot Exchange
-            </span>
-          </nav>
         </div>
 
         {/* Right: Portfolio, Faucet, & Auth */}

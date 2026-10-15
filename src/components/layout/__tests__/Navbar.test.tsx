@@ -17,10 +17,10 @@ const renderWithProviders = (ui: React.ReactElement) => {
 };
 
 describe('Navbar Component', () => {
-  it('renders Indodax branding and demo mode badge', () => {
+  it('renders branding and simulator mode badge', () => {
     renderWithProviders(<Navbar />);
-    expect(screen.getByText('INDODAX')).toBeInTheDocument();
-    expect(screen.getByText('DEMO SIMULATOR')).toBeInTheDocument();
+    expect(screen.getByText(/QA-Pre-Test|INDODAX/i)).toBeInTheDocument();
+    expect(screen.getByText(/Trading Simulator|DEMO SIMULATOR/i)).toBeInTheDocument();
   });
 
   it('renders Faucet Deposit button and Login button when unauthenticated', () => {
