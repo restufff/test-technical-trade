@@ -10,7 +10,7 @@ import {
   calculateChartBounds,
 } from './chartUtils';
 import { formatIDR, formatCrypto, formatTime } from '@/utils/formatters';
-import { BarChart2, TrendingUp, Maximize2 } from 'lucide-react';
+import { BarChart2, TrendingUp } from 'lucide-react';
 
 export default function TradingChart() {
   const { currentPair } = useMarket();
@@ -52,8 +52,8 @@ export default function TradingChart() {
 
   const bounds = useMemo(() => calculateChartBounds(candles), [candles]);
 
-  // Chart layout geometry
-  const padding = { top: 20, right: 80, bottom: 40, left: 10 };
+  // Chart layout geometry: padding.right 135px to comfortably fit long IDR prices (e.g. "Rp 1.054.200.000")
+  const padding = { top: 20, right: 135, bottom: 35, left: 10 };
   const chartWidth = Math.max(100, dimensions.width - padding.left - padding.right);
   const chartHeight = Math.max(100, dimensions.height - padding.top - padding.bottom);
   const volumeHeight = chartHeight * 0.22;
@@ -115,6 +115,11 @@ export default function TradingChart() {
   }, [bounds, priceChartHeight]);
 
   const currentPriceY = getYForPrice(currentPair.lastPrice);
+
+  // Crosshair price
+  const crosshairPrice = crosshairPos && crosshairPos.y <= padding.top + priceChartHeight
+    ? Math.round(bounds.minPrice + (bounds.maxPrice - bounds.minPrice) * (1 - (crosshairPos.y - padding.top) / priceChartHeight))
+    : null;
 
   return (
     <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
@@ -183,6 +188,22 @@ export default function TradingChart() {
           onMouseLeave={handleMouseLeave}
           className="w-full h-full cursor-crosshair"
         >
+          {/* Price Axis Background Panel */}
+          <rect
+            x={dimensions.width - padding.right}
+            y={0}
+            width={padding.right}
+            height={dimensions.height}
+            fill="#0b111e"
+          />
+          <line
+            x1={dimensions.width - padding.right}
+            y1={0}
+            x2={dimensions.width - padding.right}
+            y2={dimensions.height}
+            stroke="#18243b"
+          />
+
           {/* Horizontal Price Gridlines */}
           {priceGridLines.map((line, idx) => (
             <g key={idx}>
@@ -287,7 +308,7 @@ export default function TradingChart() {
             />
           )}
 
-          {/* Current Live Price Line */}
+          {/* Current Live Price Line & Badge */}
           {currentPriceY >= padding.top && currentPriceY <= padding.top + priceChartHeight && (
             <g>
               <line
@@ -301,17 +322,17 @@ export default function TradingChart() {
               />
               <rect
                 x={dimensions.width - padding.right + 2}
-                y={currentPriceY - 9}
-                width={74}
-                height={18}
+                y={currentPriceY - 10}
+                width={128}
+                height={20}
                 rx="4"
                 fill="#00b8d9"
               />
               <text
-                x={dimensions.width - padding.right + 6}
-                y={currentPriceY + 3.5}
+                x={dimensions.width - padding.right + 8}
+                y={currentPriceY + 4}
                 fill="#0b111e"
-                fontSize="9.5"
+                fontSize="10"
                 fontWeight="bold"
                 fontFamily="monospace"
               >
@@ -343,6 +364,28 @@ export default function TradingChart() {
                 strokeWidth="0.8"
                 strokeDasharray="3 3"
               />
+              {/* Crosshair Price Badge on Axis */}
+              {crosshairPrice !== null && (
+                <g>
+                  <rect
+                    x={dimensions.width - padding.right + 2}
+                    y={crosshairPos.y - 9}
+                    width={128}
+                    height={18}
+                    rx="3"
+                    fill="#334155"
+                  />
+                  <text
+                    x={dimensions.width - padding.right + 8}
+                    y={crosshairPos.y + 3.5}
+                    fill="#f8fafc"
+                    fontSize="9.5"
+                    fontFamily="monospace"
+                  >
+                    {formatIDR(crosshairPrice)}
+                  </text>
+                </g>
+              )}
             </g>
           )}
         </svg>

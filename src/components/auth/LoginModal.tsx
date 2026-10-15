@@ -124,7 +124,7 @@ export default function LoginModal() {
           </form>
 
           <div className="text-center text-[11px] text-gray-500 pt-1">
-            Lingkungan simulasi & testing
+            Pre-Test Only
           </div>
         </div>
       </div>
