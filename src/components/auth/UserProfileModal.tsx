@@ -10,7 +10,7 @@ export default function UserProfileModal() {
   if (!isProfileModalOpen || !user) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-testid="modal-profile" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-md rounded-2xl bg-[#0f172a] border border-[#1e2d4a] shadow-2xl overflow-hidden">
         {/* Top Accent Gradient Bar */}
         <div className="h-1.5 w-full bg-gradient-to-r from-indodax-blue via-indodax-cyan to-trading-buy" />
@@ -27,6 +27,7 @@ export default function UserProfileModal() {
             </div>
           </div>
           <button
+            data-testid="btn-close-profile"
             onClick={() => setIsProfileModalOpen(false)}
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-[#1a263f] transition-colors"
           >
@@ -39,13 +40,13 @@ export default function UserProfileModal() {
           {/* User badge banner */}
           <div className="p-4 rounded-xl bg-[#142038] border border-[#1e2d4a] flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-white text-base">{user.name}</h3>
-              <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+              <h3 data-testid="profile-user-name" className="font-semibold text-white text-base">{user.name}</h3>
+              <p data-testid="profile-user-email" className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
                 <Mail className="w-3.5 h-3.5" /> {user.email}
               </p>
             </div>
             <div className="flex flex-col items-end">
-              <span className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-trading-buy/15 text-trading-buy border border-trading-buy/30">
+              <span data-testid="profile-kyc-badge" className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-trading-buy/15 text-trading-buy border border-trading-buy/30">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 KYC Level 2
               </span>
@@ -60,7 +61,7 @@ export default function UserProfileModal() {
                 <Shield className="w-3.5 h-3.5 text-indodax-cyan" />
                 Keamanan
               </span>
-              <span className="font-medium text-trading-buy">2FA Aktif</span>
+              <span data-testid="profile-security-status" className="font-medium text-trading-buy">2FA Aktif</span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-[#0b111e] border border-[#1e2d4a]">
@@ -68,7 +69,7 @@ export default function UserProfileModal() {
                 <Award className="w-3.5 h-3.5 text-indodax-cyan" />
                 Tier Akun
               </span>
-              <span className="font-medium text-white">VIP 1 (Fee 0.1%)</span>
+              <span data-testid="profile-tier-status" className="font-medium text-white">VIP 1 (Fee 0.1%)</span>
             </div>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-[#0b111e] border border-[#1e2d4a]">
@@ -76,12 +77,13 @@ export default function UserProfileModal() {
                 <Calendar className="w-3.5 h-3.5 text-indodax-cyan" />
                 Bergabung
               </span>
-              <span className="font-medium text-gray-200">{user.memberSince}</span>
+              <span data-testid="profile-member-since" className="font-medium text-gray-200">{user.memberSince}</span>
             </div>
           </div>
 
           {/* Logout Button */}
           <button
+            data-testid="btn-logout"
             onClick={logout}
             className="w-full py-2.5 rounded-lg bg-[#1a233a] hover:bg-trading-sell/20 border border-[#2a385a] hover:border-trading-sell/40 text-trading-sell font-semibold text-sm transition-all flex items-center justify-center gap-2 mt-4"
           >

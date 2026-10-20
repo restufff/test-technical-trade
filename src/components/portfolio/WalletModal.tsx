@@ -18,7 +18,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-testid="modal-wallet" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-2xl rounded-2xl bg-[#0f172a] border border-[#1e2d4a] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-[#18233c] bg-[#0d1424]">
@@ -32,6 +32,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
             </div>
           </div>
           <button
+            data-testid="btn-close-wallet"
             onClick={onClose}
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-[#1a263f] transition-colors"
           >
@@ -43,11 +44,12 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
         <div className="p-6 bg-[#0b111e] border-b border-[#18233c] flex items-center justify-between">
           <div>
             <span className="text-xs text-gray-400">Total Estimasi Aset (IDR)</span>
-            <div className="text-2xl font-black text-white font-mono tabular-nums mt-0.5">
+            <div data-testid="wallet-total-balance" className="text-2xl font-black text-white font-mono tabular-nums mt-0.5">
               {formatIDR(totalPortfolioIDR)}
             </div>
           </div>
           <button
+            data-testid="btn-wallet-faucet"
             onClick={() => {
               onClose();
               setIsDepositModalOpen(true);
@@ -78,7 +80,7 @@ export default function WalletModal({ isOpen, onClose }: WalletModalProps) {
                 const est = Math.round(totalAmount * price);
 
                 return (
-                  <tr key={asset} className="hover:bg-[#121c30] transition-colors">
+                  <tr key={asset} data-testid={`wallet-asset-row-${asset}`} className="hover:bg-[#121c30] transition-colors">
                     <td className="py-2.5 font-bold text-white flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-[#18243c] flex items-center justify-center text-[10px] text-indodax-cyan">
                         {asset.substring(0, 3)}

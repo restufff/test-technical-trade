@@ -12,11 +12,12 @@ export default function OrdersTable() {
   const [activeTab, setActiveTab] = useState<'open' | 'history' | 'assets'>('open');
 
   return (
-    <div className="w-full bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none flex flex-col min-h-[280px]">
+    <div data-testid="orders-table" className="w-full bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none flex flex-col min-h-[280px]">
       {/* Tabs Header */}
       <div className="px-4 py-2 border-b border-[#18233c] flex items-center justify-between bg-[#0d1424]">
         <div className="flex items-center space-x-2">
           <button
+            data-testid="tab-open-orders"
             onClick={() => setActiveTab('open')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'open'
@@ -34,6 +35,7 @@ export default function OrdersTable() {
           </button>
 
           <button
+            data-testid="tab-order-history"
             onClick={() => setActiveTab('history')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'history'
@@ -46,6 +48,7 @@ export default function OrdersTable() {
           </button>
 
           <button
+            data-testid="tab-assets-balances"
             onClick={() => setActiveTab('assets')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'assets'
@@ -65,7 +68,7 @@ export default function OrdersTable() {
         {activeTab === 'open' && (
           <div>
             {openOrders.length === 0 ? (
-              <div className="py-16 text-center text-xs text-gray-500 flex flex-col items-center justify-center">
+              <div data-testid="empty-open-orders" className="py-16 text-center text-xs text-gray-500 flex flex-col items-center justify-center">
                 <ListOrdered className="w-8 h-8 text-gray-600 mb-2" />
                 <span>Belum ada order terbuka</span>
                 <span className="text-[11px] text-gray-600 mt-0.5">
@@ -73,7 +76,7 @@ export default function OrdersTable() {
                 </span>
               </div>
             ) : (
-              <table className="w-full text-left text-xs font-mono">
+              <table data-testid="table-open-orders" className="w-full text-left text-xs font-mono">
                 <thead className="bg-[#0b111e] text-[10px] text-gray-400 uppercase tracking-wider border-b border-[#141f33]">
                   <tr>
                     <th className="py-2.5 px-4">Waktu</th>
@@ -91,7 +94,7 @@ export default function OrdersTable() {
                     const isBuy = order.side === 'BUY';
                     const pair = pairs.find((p) => p.id === order.pairId);
                     return (
-                      <tr key={order.id} className="hover:bg-[#121c30] transition-colors">
+                      <tr key={order.id} data-testid={`open-order-row-${order.id}`} className="hover:bg-[#121c30] transition-colors">
                         <td suppressHydrationWarning className="py-2.5 px-4 text-gray-400">
                           {formatTime(order.createdAt, true)}
                         </td>
@@ -117,6 +120,7 @@ export default function OrdersTable() {
                         </td>
                         <td className="py-2.5 px-4 text-center">
                           <button
+                            data-testid={`btn-cancel-order-${order.id}`}
                             onClick={() => cancelOrder(order.id)}
                             className="px-2.5 py-1 rounded bg-trading-sell/15 hover:bg-trading-sell/25 text-trading-sell border border-trading-sell/30 text-[10px] font-bold transition-all flex items-center gap-1 mx-auto"
                           >

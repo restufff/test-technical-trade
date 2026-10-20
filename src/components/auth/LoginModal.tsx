@@ -26,7 +26,7 @@ export default function LoginModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-testid="modal-login" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-md rounded-2xl bg-[#0f172a] border border-[#1e2d4a] shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-[#18233c] bg-[#0d1424]">
@@ -35,6 +35,7 @@ export default function LoginModal() {
             <p className="text-xs text-gray-400">Pilih akun tester atau login manual</p>
           </div>
           <button
+            data-testid="btn-close-login"
             onClick={() => setIsLoginModalOpen(false)}
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-[#1a263f] transition-colors"
           >
@@ -54,6 +55,7 @@ export default function LoginModal() {
                 <button
                   key={user.id}
                   type="button"
+                  data-testid={`btn-quick-account-${idx}`}
                   onClick={() => loginWithDemoAccount(idx)}
                   className="flex flex-col text-left p-2.5 rounded-xl bg-[#142038] hover:bg-[#1a2b4c] border border-[#1f3152] hover:border-indodax-cyan/50 transition-all group"
                 >
@@ -74,7 +76,7 @@ export default function LoginModal() {
           </div>
 
           {error && (
-            <div className="p-3 rounded-lg bg-trading-sell/10 border border-trading-sell/30 flex items-start gap-2 text-xs text-trading-sell">
+            <div data-testid="login-error-alert" className="p-3 rounded-lg bg-trading-sell/10 border border-trading-sell/30 flex items-start gap-2 text-xs text-trading-sell">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
@@ -87,6 +89,7 @@ export default function LoginModal() {
                 <Mail className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
                 <input
                   type="email"
+                  data-testid="input-login-email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="demo@exchange.mock"
@@ -105,6 +108,7 @@ export default function LoginModal() {
                 <Lock className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
                 <input
                   type="password"
+                  data-testid="input-login-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -116,6 +120,7 @@ export default function LoginModal() {
 
             <button
               type="submit"
+              data-testid="btn-login-submit"
               disabled={isLoading}
               className="w-full py-2.5 rounded-lg bg-indodax-cyan hover:bg-indodax-cyanHover text-[#0b111e] font-bold text-sm shadow-lg shadow-indodax-cyan/20 transition-all flex items-center justify-center gap-2 mt-4"
             >
@@ -124,7 +129,7 @@ export default function LoginModal() {
           </form>
 
           <div className="text-center text-[11px] text-gray-500 pt-1">
-            Pre-Test Only
+            Lingkungan simulasi & testing
           </div>
         </div>
       </div>

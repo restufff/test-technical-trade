@@ -26,7 +26,7 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
+    <div data-testid="order-book" className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
       {/* Header & View Mode Switcher (Fixed) */}
       <div className="px-3 py-2 border-b border-[#18233c] flex items-center justify-between bg-[#0d1424] shrink-0">
         <div className="flex items-center space-x-1.5">
@@ -37,6 +37,7 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
         {/* View Mode Buttons */}
         <div className="flex items-center space-x-1">
           <button
+            data-testid="btn-view-both"
             onClick={() => setViewMode('both')}
             title="Tampilkan Bids & Asks"
             className={`w-6 h-5 rounded flex flex-col items-center justify-center gap-0.5 transition-colors ${
@@ -47,6 +48,7 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
             <div className="w-3.5 h-1 bg-trading-buy rounded-sm" />
           </button>
           <button
+            data-testid="btn-view-bids"
             onClick={() => setViewMode('bids')}
             title="Hanya Bids (Beli)"
             className={`w-6 h-5 rounded flex flex-col items-center justify-center gap-0.5 transition-colors ${
@@ -56,6 +58,7 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
             <div className="w-3.5 h-2.5 bg-trading-buy rounded-sm" />
           </button>
           <button
+            data-testid="btn-view-asks"
             onClick={() => setViewMode('asks')}
             title="Hanya Asks (Jual)"
             className={`w-6 h-5 rounded flex flex-col items-center justify-center gap-0.5 transition-colors ${
@@ -78,10 +81,11 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
       <div className="flex-grow min-h-0 flex flex-col overflow-hidden text-[11px] font-mono tabular-nums">
         {/* Asks (Sell Orders) - Scrollable */}
         {(viewMode === 'both' || viewMode === 'asks') && (
-          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
+          <div data-testid="orderbook-asks-container" className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
             {asksToDisplay.map((entry, idx) => (
               <button
                 key={`ask-${idx}-${entry.price}`}
+                data-testid={`orderbook-ask-row-${idx}`}
                 onClick={() => handleRowClick(entry.price, entry.amount)}
                 className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full shrink-0"
               >
@@ -105,9 +109,10 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
         )}
 
         {/* Center Spread & Last Price Bar (Fixed in middle, does not scroll) */}
-        <div className="shrink-0 px-3 py-1.5 my-0.5 bg-[#0a101d] border-y border-[#18243d] flex items-center justify-between text-xs font-semibold z-10">
+        <div data-testid="orderbook-spread-container" className="shrink-0 px-3 py-1.5 my-0.5 bg-[#0a101d] border-y border-[#18243d] flex items-center justify-between text-xs font-semibold z-10">
           <div className="flex items-center space-x-2">
             <span
+              data-testid="orderbook-spread-price"
               className={`text-sm font-bold flex items-center gap-1 transition-colors ${
                 priceFlash === 'up'
                   ? 'text-trading-buy'
@@ -124,17 +129,18 @@ export default function OrderBook({ onSelectPrice, onSelectAmount }: OrderBookPr
           </div>
           <div className="text-[10px] text-gray-400 flex items-center gap-1 font-mono">
             <span>Spread:</span>
-            <span className="text-gray-200">{formatIDR(orderBook.spread)}</span>
+            <span data-testid="orderbook-spread-diff" className="text-gray-200">{formatIDR(orderBook.spread)}</span>
             <span className="text-gray-400">({orderBook.spreadPercent}%)</span>
           </div>
         </div>
 
         {/* Bids (Buy Orders) - Scrollable */}
         {(viewMode === 'both' || viewMode === 'bids') && (
-          <div className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
+          <div data-testid="orderbook-bids-container" className="flex-1 min-h-0 overflow-y-auto flex flex-col divide-y divide-[#121b2f]/40 pr-0.5">
             {bidsToDisplay.map((entry, idx) => (
               <button
                 key={`bid-${idx}-${entry.price}`}
+                data-testid={`orderbook-bid-row-${idx}`}
                 onClick={() => handleRowClick(entry.price, entry.amount)}
                 className="relative grid grid-cols-3 px-3 py-1 text-left hover:bg-[#18233b] transition-colors group cursor-pointer w-full shrink-0"
               >

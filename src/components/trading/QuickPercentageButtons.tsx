@@ -14,11 +14,12 @@ export default function QuickPercentageButtons({
   const percentages = [25, 50, 75, 100];
 
   return (
-    <div className="grid grid-cols-4 gap-1.5 my-2">
+    <div data-testid="quick-percentage-buttons" className="grid grid-cols-4 gap-1.5 my-2">
       {percentages.map((pct) => (
         <button
           key={pct}
           type="button"
+          data-testid={`btn-percent-${pct}`}
           onClick={() => onSelect(pct)}
           className={`py-1 rounded text-[11px] font-semibold transition-all ${
             activePercent === pct

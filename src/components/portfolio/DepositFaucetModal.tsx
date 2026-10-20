@@ -34,7 +34,7 @@ export default function DepositFaucetModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-testid="modal-faucet" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-md rounded-2xl bg-[#0f172a] border border-[#1e2d4a] shadow-2xl overflow-hidden">
         {/* Accent Bar */}
         <div className="h-1.5 w-full bg-gradient-to-r from-trading-buy via-indodax-cyan to-indodax-blue" />
@@ -54,6 +54,7 @@ export default function DepositFaucetModal() {
             </div>
           </div>
           <button
+            data-testid="btn-close-faucet"
             onClick={() => setIsDepositModalOpen(false)}
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-[#1a263f] transition-colors"
           >
@@ -65,7 +66,7 @@ export default function DepositFaucetModal() {
         <div className="px-6 pb-6 pt-2 space-y-4">
           <div className="p-3 rounded-xl bg-[#0b111e] border border-[#1e2d4a] flex items-center justify-between text-xs">
             <span className="text-gray-400">Saldo IDR Saat Ini:</span>
-            <span className="font-bold text-trading-buy text-sm tabular-nums">
+            <span data-testid="faucet-current-balance" className="font-bold text-trading-buy text-sm tabular-nums">
               {formatIDR(balances.IDR?.available || 0)}
             </span>
           </div>
@@ -79,6 +80,7 @@ export default function DepositFaucetModal() {
                 <button
                   key={preset}
                   type="button"
+                  data-testid={`btn-faucet-preset-${preset}`}
                   onClick={() => setAmount(preset)}
                   className={`p-3 rounded-xl text-left border transition-all ${
                     amount === preset
@@ -94,12 +96,13 @@ export default function DepositFaucetModal() {
           </div>
 
           {success ? (
-            <div className="py-3 px-4 rounded-xl bg-trading-buy/20 border border-trading-buy text-trading-buy text-xs font-bold flex items-center justify-center gap-2">
+            <div data-testid="faucet-success-message" className="py-3 px-4 rounded-xl bg-trading-buy/20 border border-trading-buy text-trading-buy text-xs font-bold flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4" />
               Saldo {formatIDR(amount)} berhasil ditambahkan ke dompet!
             </div>
           ) : (
             <button
+              data-testid="btn-faucet-submit"
               onClick={handleDeposit}
               className="w-full py-3 rounded-xl bg-trading-buy hover:bg-trading-buyHover text-[#0b111e] font-extrabold text-sm shadow-lg shadow-trading-buy/20 transition-all flex items-center justify-center gap-2 mt-4"
             >

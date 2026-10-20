@@ -124,11 +124,12 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
+    <div data-testid="trading-form" className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
       {/* Side Tabs (Beli vs Jual) */}
       <div className="grid grid-cols-2 p-1.5 bg-[#0d1424] border-b border-[#18233c] gap-1.5 shrink-0">
         <button
           type="button"
+          data-testid="tab-side-buy"
           onClick={() => {
             setSide('BUY');
             setActivePercent(null);
@@ -143,6 +144,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
         </button>
         <button
           type="button"
+          data-testid="tab-side-sell"
           onClick={() => {
             setSide('SELL');
             setActivePercent(null);
@@ -162,6 +164,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
         <div className="flex items-center space-x-2 border-b border-[#18233c] pb-2">
           <button
             type="button"
+            data-testid="tab-type-limit"
             onClick={() => setType('LIMIT')}
             className={`text-xs font-bold pb-1 transition-colors relative ${
               type === 'LIMIT' ? 'text-indodax-cyan' : 'text-gray-400 hover:text-white'
@@ -174,6 +177,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
           </button>
           <button
             type="button"
+            data-testid="tab-type-market"
             onClick={() => setType('MARKET')}
             className={`text-xs font-bold pb-1 transition-colors relative ${
               type === 'MARKET' ? 'text-indodax-cyan' : 'text-gray-400 hover:text-white'
@@ -192,7 +196,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
             <Wallet className="w-3.5 h-3.5 text-indodax-cyan" />
             Tersedia:
           </span>
-          <span className="font-bold text-white tabular-nums">
+          <span data-testid="available-balance-text" className="font-bold text-white tabular-nums">
             {side === 'BUY'
               ? formatIDR(availableIDR)
               : `${formatCrypto(availableCrypto, currentPair.amountDecimals)} ${currentPair.baseAsset}`}
@@ -211,6 +215,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
               <div className="relative">
                 <input
                   type="text"
+                  data-testid="input-order-price"
                   disabled={type === 'MARKET'}
                   value={type === 'MARKET' ? 'Harga Pasar Terbaik (Market)' : priceStr}
                   onChange={(e) => {
@@ -235,6 +240,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
               <div className="relative">
                 <input
                   type="text"
+                  data-testid="input-order-amount"
                   value={amountStr}
                   placeholder={`Min ${currentPair.minOrderAmount}`}
                   onChange={(e) => {
@@ -256,11 +262,11 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
             <div className="space-y-1.5 p-2.5 rounded-lg bg-[#0d1424] border border-[#18233c] text-xs">
               <div className="flex justify-between text-gray-400 text-[11px]">
                 <span>Estimasi Biaya ({feePercent}%)</span>
-                <span className="text-gray-300 font-mono tabular-nums">{formatIDR(estimatedFee)}</span>
+                <span data-testid="estimated-fee-text" className="text-gray-300 font-mono tabular-nums">{formatIDR(estimatedFee)}</span>
               </div>
               <div className="flex justify-between text-white font-semibold pt-1 border-t border-[#1b2742]">
                 <span>Total Biaya</span>
-                <span className="text-indodax-cyan font-bold font-mono tabular-nums">
+                <span data-testid="total-cost-text" className="text-indodax-cyan font-bold font-mono tabular-nums">
                   {formatIDR(side === 'BUY' ? total + estimatedFee : total - estimatedFee)}
                 </span>
               </div>
@@ -271,6 +277,7 @@ export default function TradingForm({ selectedPrice, selectedAmount }: TradingFo
           <div className="pt-2">
             <button
               type="submit"
+              data-testid="btn-submit-order"
               disabled={isSubmitting}
               className={`w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg ${
                 side === 'BUY'

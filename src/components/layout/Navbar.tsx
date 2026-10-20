@@ -21,20 +21,20 @@ export default function Navbar() {
   const [showBalance, setShowBalance] = useState(true);
 
   return (
-    <header className="w-full bg-[#0b111e] border-b border-[#18233c] sticky top-0 z-40 select-none">
+    <header data-testid="navbar" className="w-full bg-[#0b111e] border-b border-[#18233c] sticky top-0 z-40 select-none">
       <div className="max-w-[1920px] mx-auto px-4 h-14 flex items-center justify-between">
         {/* Left: Branding */}
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2.5">
             {/* Indodax Stylized Modern Logo */}
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-indodax-blue to-indodax-cyan shadow-lg shadow-indodax-cyan/20">
+            <div data-testid="navbar-logo-icon" className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-indodax-blue to-indodax-cyan shadow-lg shadow-indodax-cyan/20">
               <span className="text-[#0b111e] font-black text-sm tracking-tighter">TEST</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-extrabold text-lg tracking-wider text-white">
+              <span data-testid="navbar-logo-title" className="font-extrabold text-lg tracking-wider text-white">
                 QA-Pre-Test
               </span>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indodax-cyan/15 text-indodax-cyan border border-indodax-cyan/30">
+              <span data-testid="navbar-badge" className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-indodax-cyan/15 text-indodax-cyan border border-indodax-cyan/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-indodax-cyan animate-ping" />
                 Trading Simulator
               </span>
@@ -45,15 +45,16 @@ export default function Navbar() {
         {/* Right: Portfolio, Faucet, & Auth */}
         <div className="flex items-center space-x-3">
           {/* Portfolio Balance Widget */}
-          <div className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-[#121a2d] border border-[#1e2d4a]">
+          <div data-testid="widget-portfolio" className="hidden lg:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-[#121a2d] border border-[#1e2d4a]">
             <Wallet className="w-3.5 h-3.5 text-indodax-cyan" />
             <div className="flex flex-col text-right">
               <span className="text-[10px] text-gray-400 font-medium leading-none">Total Portofolio</span>
-              <span className="text-xs font-bold text-white tabular-nums leading-tight">
+              <span data-testid="portfolio-balance-value" className="text-xs font-bold text-white tabular-nums leading-tight">
                 {showBalance ? formatIDR(totalPortfolioIDR) : '••••••••••••'}
               </span>
             </div>
             <button
+              data-testid="btn-toggle-balance"
               onClick={() => setShowBalance(!showBalance)}
               className="text-gray-400 hover:text-gray-200 transition-colors p-0.5"
               title={showBalance ? 'Sembunyikan Saldo' : 'Tampilkan Saldo'}
@@ -64,6 +65,7 @@ export default function Navbar() {
 
           {/* Faucet Top-Up Button */}
           <button
+            data-testid="btn-open-faucet"
             onClick={() => setIsDepositModalOpen(true)}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-trading-buy/15 hover:bg-trading-buy/25 border border-trading-buy/40 text-trading-buy font-bold text-xs transition-all shadow-sm"
           >
@@ -73,6 +75,7 @@ export default function Navbar() {
 
           {/* Reset button (small) */}
           <button
+            data-testid="btn-reset-balances"
             onClick={resetBalances}
             title="Reset saldo ke kondisi awal"
             className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-[#152238] border border-transparent hover:border-[#223354] transition-all hidden sm:block"
@@ -83,19 +86,21 @@ export default function Navbar() {
           {/* Auth Button or User Profile */}
           {isAuthenticated && user ? (
             <button
+              data-testid="btn-user-profile"
               onClick={() => setIsProfileModalOpen(true)}
               className="flex items-center space-x-2 pl-2 pr-3 py-1 rounded-xl bg-[#142038] hover:bg-[#1a2b4c] border border-[#1f3152] transition-all text-xs"
             >
               <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indodax-cyan to-trading-buy flex items-center justify-center text-[#0b111e] font-bold text-[10px]">
                 {user.name.charAt(0)}
               </div>
-              <span className="font-semibold text-white max-w-[100px] truncate hidden sm:inline">
+              <span data-testid="user-profile-name" className="font-semibold text-white max-w-[100px] truncate hidden sm:inline">
                 {user.name.split(' ')[0]}
               </span>
               <CheckCircle className="w-3.5 h-3.5 text-trading-buy" />
             </button>
           ) : (
             <button
+              data-testid="btn-open-login"
               onClick={() => setIsLoginModalOpen(true)}
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-indodax-cyan hover:bg-indodax-cyanHover text-[#0b111e] font-bold text-xs transition-all shadow-md shadow-indodax-cyan/20"
             >

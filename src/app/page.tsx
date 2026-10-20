@@ -62,7 +62,7 @@ function ExchangeContent() {
       <MarketTickerBar />
 
       {/* Main Exchange Workspace Grid */}
-      <main className="flex-grow max-w-[1920px] w-full mx-auto p-2 sm:p-3 grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3">
+      <main data-testid="main-exchange-container" className="flex-grow max-w-[1920px] w-full mx-auto p-2 sm:p-3 grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3">
         {/* Left / Center Section (Chart + Orders Table) - spans 8 cols on desktop */}
         <section className="lg:col-span-8 flex flex-col gap-2 sm:gap-3">
           {/* Chart Component */}
@@ -82,6 +82,7 @@ function ExchangeContent() {
           <div className="h-[400px] flex flex-col min-h-0">
             <div className="flex items-center space-x-1 mb-1.5 px-1 shrink-0">
               <button
+                data-testid="tab-panel-orderbook"
                 onClick={() => setRightPanelTab('orderbook')}
                 className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
                   rightPanelTab === 'orderbook'
@@ -92,6 +93,7 @@ function ExchangeContent() {
                 Order Book
               </button>
               <button
+                data-testid="tab-panel-trades"
                 onClick={() => setRightPanelTab('trades')}
                 className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
                   rightPanelTab === 'trades'

@@ -122,7 +122,7 @@ export default function TradingChart() {
     : null;
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
+    <div data-testid="trading-chart" className="w-full h-full flex flex-col bg-[#0f172a] rounded-xl border border-[#1e2d4a] overflow-hidden select-none">
       {/* Top Controls Toolbar */}
       <div className="px-4 py-2 border-b border-[#18233c] flex flex-wrap items-center justify-between gap-2 bg-[#0d1424]">
         {/* Timeframe Buttons */}
@@ -131,6 +131,7 @@ export default function TradingChart() {
           {(['1m', '5m', '15m', '1h', '1D'] as Timeframe[]).map((tf) => (
             <button
               key={tf}
+              data-testid={`btn-timeframe-${tf}`}
               onClick={() => setTimeframe(tf)}
               className={`px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
                 timeframe === tf
@@ -145,7 +146,7 @@ export default function TradingChart() {
 
         {/* Display Stats for Active Candle */}
         {activeCandle && (
-          <div className="hidden xl:flex items-center space-x-4 text-[11px] font-mono tabular-nums">
+          <div data-testid="chart-active-candle-stats" className="hidden xl:flex items-center space-x-4 text-[11px] font-mono tabular-nums">
             <span className="text-gray-400">
               O: <strong className="text-white">{formatIDR(activeCandle.open)}</strong>
             </span>
@@ -169,6 +170,7 @@ export default function TradingChart() {
         {/* Right Toggle */}
         <div className="flex items-center space-x-1">
           <button
+            data-testid="btn-toggle-chart-type"
             onClick={() => setChartType(chartType === 'candles' ? 'line' : 'candles')}
             className="p-1.5 rounded-md hover:bg-[#142038] text-gray-400 hover:text-white transition-colors"
             title="Ganti Tipe Chart"

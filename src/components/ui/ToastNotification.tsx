@@ -46,7 +46,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={{ toasts, showToast, removeToast }}>
       {children}
       {/* Toast container floating at top right */}
-      <div className="fixed top-16 right-4 z-[9999] flex flex-col space-y-2.5 pointer-events-none max-w-sm w-full">
+      <div data-testid="toast-container" className="fixed top-16 right-4 z-[9999] flex flex-col space-y-2.5 pointer-events-none max-w-sm w-full">
         {toasts.map((toast) => {
           const isSuccess = toast.type === 'success';
           const isError = toast.type === 'error';
@@ -54,6 +54,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           return (
             <div
               key={toast.id}
+              data-testid="toast-notification"
               className={`pointer-events-auto p-3.5 rounded-xl border shadow-2xl flex items-start gap-3 animate-in slide-in-from-top-3 duration-250 backdrop-blur-md transition-all ${
                 isSuccess
                   ? 'bg-[#0a1f1b]/95 border-trading-buy/50 text-trading-buy shadow-trading-buy/10'
@@ -80,8 +81,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
               <div className="flex-grow text-xs min-w-0">
                 <div className="font-bold text-white text-sm tracking-wide leading-tight flex items-center gap-1.5">
-                  {toast.title}
+                  <span data-testid="toast-title">{toast.title}</span>
                   <span
+                    data-testid="toast-badge"
                     className={`text-[9px] font-bold px-1.5 py-0.2 rounded ${
                       isSuccess
                         ? 'bg-trading-buy/20 text-trading-buy'
@@ -94,13 +96,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   </span>
                 </div>
                 {toast.message && (
-                  <div className="text-gray-300 mt-1 leading-relaxed text-[11.5px] break-words">
+                  <div data-testid="toast-message" className="text-gray-300 mt-1 leading-relaxed text-[11.5px] break-words">
                     {toast.message}
                   </div>
                 )}
               </div>
 
               <button
+                data-testid="btn-dismiss-toast"
                 onClick={() => removeToast(toast.id)}
                 className="text-gray-400 hover:text-white transition-colors shrink-0 p-0.5 rounded hover:bg-white/10"
               >

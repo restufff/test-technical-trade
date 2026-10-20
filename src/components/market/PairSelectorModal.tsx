@@ -24,7 +24,7 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+    <div data-testid="modal-pair-selector" className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="relative w-full max-w-lg rounded-2xl bg-[#0f172a] border border-[#1e2d4a] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-[#1e2d4a]">
@@ -33,6 +33,7 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
             <p className="text-xs text-gray-400">Pair trading dengan Rupiah (IDR)</p>
           </div>
           <button
+            data-testid="btn-close-pair-selector"
             onClick={onClose}
             className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-[#1a263f] transition-colors"
           >
@@ -46,6 +47,7 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
             <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             <input
               type="text"
+              data-testid="input-search-pair"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Cari koin (contoh: BTC, Ethereum, USDT)..."
@@ -56,9 +58,9 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
         </div>
 
         {/* Pair List */}
-        <div className="overflow-y-auto divide-y divide-[#18233c] p-2 flex-grow">
+        <div data-testid="pair-list-container" className="overflow-y-auto divide-y divide-[#18233c] p-2 flex-grow">
           {filtered.length === 0 ? (
-            <div className="py-12 text-center text-sm text-gray-400">
+            <div data-testid="pair-search-empty" className="py-12 text-center text-sm text-gray-400">
               Tidak ada koin yang sesuai dengan pencarian &quot;{search}&quot;
             </div>
           ) : (
@@ -69,6 +71,7 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
               return (
                 <button
                   key={pair.id}
+                  data-testid={`pair-item-${pair.id}`}
                   onClick={() => {
                     setPair(pair.id);
                     onClose();
@@ -85,7 +88,7 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
                     </div>
                     <div>
                       <div className="flex items-center space-x-1.5">
-                        <span className="font-bold text-white text-sm">{pair.symbol}</span>
+                        <span data-testid={`pair-symbol-${pair.id}`} className="font-bold text-white text-sm">{pair.symbol}</span>
                         {isSelected && <Check className="w-3.5 h-3.5 text-indodax-cyan" />}
                       </div>
                       <span className="text-xs text-gray-400">{pair.name}</span>
@@ -93,10 +96,11 @@ export default function PairSelectorModal({ isOpen, onClose }: PairSelectorModal
                   </div>
 
                   <div className="text-right">
-                    <div className="font-semibold text-white text-sm tabular-nums">
+                    <div data-testid={`pair-price-${pair.id}`} className="font-semibold text-white text-sm tabular-nums">
                       {formatIDR(pair.lastPrice)}
                     </div>
                     <div
+                      data-testid={`pair-change-${pair.id}`}
                       className={`text-xs font-semibold flex items-center justify-end gap-0.5 tabular-nums ${
                         isUp ? 'text-trading-buy' : 'text-trading-sell'
                       }`}
